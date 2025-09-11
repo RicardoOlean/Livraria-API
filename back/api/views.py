@@ -9,7 +9,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
 #Filters
-from rest_framework import filters
+from .filters import AutorFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 
@@ -62,10 +62,12 @@ def listar_livros(request):
 class AutoresView(ListCreateAPIView):
     queryset = Autor.objects.all()
     serializer_class = AutorSerializer
-    permission_classes=[IsAuthenticated]
+    # permission_classes =[IsAuthenticated]
+    
     filter_backends = [DjangoFilterBackend, SearchFilter]
-    filterset_fields = ['id'] #permite o filtro exato
-    search_filter = ['autor'] # habilita a busca total de strings
+    filterset_fields = ['id', 'autor', 's_autor']      # Permite o filtro exato
+    search_fields = ['autor', 's_autor']               # busca parcial: ?search=Jorge
+    filterset_class = AutorFilter   
 
 
 class AutoresDetailView(RetrieveUpdateDestroyAPIView):
